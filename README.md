@@ -75,6 +75,22 @@ You can preview the production build with `bun run preview`.
 
 > To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
 
+## Update i18n
+
+Use in code:
+
+```
+i18n`The text`  // front-end i18n, auto translate 6 language, return browser now language
+i18nKey(`The text`)  // back-end i18n, auto translate 6 language, only return "The text"
+i18nFromKey(`The text`)  // use "The text" return browser now language
+```
+
+Build in CLI:
+
+```
+bun run i18n
+```
+
 ## migrate
 
 If error:
