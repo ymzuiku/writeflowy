@@ -52,3 +52,6 @@ jobs:
       - name: Run DB Migration
         run: |
           ssh -i ./deploy_key -o StrictHostKeyChecking=no ${{ secrets.GG_SSH_URL }} "cd ~/server/ && ./ais-migrate.sh"
+      - name: Delete other
+        run: |
+          rm -r ./deploy_key
