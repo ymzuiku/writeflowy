@@ -1,0 +1,30 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body,
+body > div,
+.app {
+	touch-action: manipulation;
+	min-height: 100%;
+	color: #000;
+}
+
+* {
+	touch-action: manipulation;
+}
+
+:root {
+	touch-action: manipulation;
+	background: #f8fafc;
+}
+
+::selection {
+	background-color: #0066ee;
+	color: #fff;
+}
+
+* {
+	-webkit-tap-highlight-color: transparent;
+}

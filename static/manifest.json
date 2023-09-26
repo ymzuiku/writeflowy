@@ -1,0 +1,57 @@
+{
+	"name": "Writeflowy",
+	"short_name": "Writeflowy",
+	"start_url": "/",
+	"display": "standalone",
+	"description": "AI customer learn english",
+	"prefer_related_applications": true,
+	"background_color": "#f8fafc",
+	"theme_color": "#f8fafc",
+	"icons": [
+		{
+			"src": "/icon/icon32.png",
+			"sizes": "32x32",
+			"type": "image/png"
+		},
+		{
+			"src": "/icon/icon72.png",
+			"sizes": "72x72",
+			"type": "image/png"
+		},
+		{
+			"src": "/icon/icon114.png",
+			"sizes": "114x114",
+			"type": "image/png"
+		},
+		{
+			"src": "/icon/icon128.png",
+			"sizes": "128x128",
+			"type": "image/png"
+		},
+		{
+			"src": "/icon/icon144.png",
+			"sizes": "144x144",
+			"type": "image/png"
+		},
+		{
+			"src": "/icon/icon180.png",
+			"sizes": "180x180",
+			"type": "image/png"
+		},
+		{
+			"src": "/icon/icon192.png",
+			"sizes": "192x192",
+			"type": "image/png"
+		},
+		{
+			"src": "/icon/icon256.png",
+			"sizes": "256x256",
+			"type": "image/png"
+		},
+		{
+			"src": "/icon/icon512.png",
+			"sizes": "512x512",
+			"type": "image/png"
+		}
+	]
+}

@@ -1,0 +1,6 @@
+[test]
+preload = ["./bun-preload-test.ts"]
+
+# Reduce memory usage at the cost of performance
+# smol = true
+# coverage = true

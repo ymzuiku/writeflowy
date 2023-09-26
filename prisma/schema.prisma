@@ -1,0 +1,120 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Base {
+  id      Int      @id @default(autoincrement())
+  created DateTime @default(now())
+  updated DateTime @default(now()) @updatedAt
+
+  @@index([created])
+  @@index([updated])
+}
+
+model User {
+  id                  Int      @id @default(autoincrement())
+  email               String   @unique @db.VarChar(128)
+  token               String?  @db.VarChar(256)
+  password            String   @db.VarChar(128)
+  created             DateTime @default(now())
+  updated             DateTime @default(now()) @updatedAt
+  name                String?  @db.VarChar(128)
+  learn               String   @default("en")
+  local               String   @default("zh")
+  occupation          String?  @db.VarChar(128)
+  years_of_experience Int?
+  education           String?  @db.VarChar(128)
+  address             String?  @db.VarChar(256)
+  target_position     String?  @db.VarChar(128)
+  current_company     String?  @db.VarChar(128)
+  desired_company     String?  @db.VarChar(128)
+  skills              String?  @db.VarChar(3000)
+  personal_intro      String?  @db.VarChar(3000)
+
+  @@index([email])
+  @@index([created])
+  @@index([updated])
+}
+
+model Memory {
+  id           Int      @id @default(autoincrement())
+  userId       Int
+  sentenceId   Int
+  times        Int
+  memorability Float
+  created      DateTime @default(now())
+  updated      DateTime @default(now()) @updatedAt
+  text         String   @db.VarChar(6000)
+  translate    String?  @db.VarChar(6000)
+  learn        String   @default("en")
+  local        String   @default("zh")
+  difficulty   Float?
+  memorization Float?
+
+  @@unique([userId, text, learn, local])
+  @@index([created])
+  @@index([updated])
+  @@index([memorability])
+}
+
+model Sentence {
+  id        Int      @id @default(autoincrement())
+  created   DateTime @default(now())
+  updated   DateTime @default(now()) @updatedAt
+  text      String   @db.VarChar(6000)
+  explain   String   @db.VarChar(300000)
+  learn     String   @default("en")
+  local     String   @default("zh")
+  translate String   @default("") @db.VarChar(3000)
+
+  difficulty   Float?
+  memorization Float?
+
+  @@unique([text, learn, local])
+  @@index([created])
+  @@index([updated])
+}
+
+model Analyze {
+  id           Int      @id @default(autoincrement())
+  created      DateTime @default(now())
+  updated      DateTime @default(now()) @updatedAt
+  enTitle      String   @db.VarChar(1000)
+  esTitle      String?  @db.VarChar(1000)
+  zhTitle      String?  @db.VarChar(1000)
+  jpTitle      String?  @db.VarChar(1000)
+  frTitle      String?  @db.VarChar(1000)
+  type         String   @default("scene")
+  learn        String   @default("en")
+  image        String?
+  imageUserUrl String?
+  hashQuestion String?
+  creatorId    Int      @default(0)
+  // answer       String
+  star         Int      @default(0)
+
+  @@index([enTitle])
+  @@index([hashQuestion])
+}
+
+model Order {
+  id         Int      @id @default(autoincrement())
+  created    DateTime @default(now())
+  updated    DateTime @default(now()) @updatedAt
+  orderId    String   @db.VarChar(1000)
+  subscribId String
+  amount     Int
+  days       Int
+  currency   String
+  address    String?  @db.VarChar(3000)
+  userId     Int
+  email      String
+
+  @@index([orderId])
+  @@index([userId])
+}

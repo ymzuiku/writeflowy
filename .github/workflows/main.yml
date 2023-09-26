@@ -1,0 +1,54 @@
+name: main_deploy
+
+on:
+  push:
+    branches: [main]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  main-client:
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: |
+          bun install
+          bun prisma generate
+      - name: ESLint cache
+        uses: actions/cache@v3
+        with:
+          path: .eslintcache
+          key: |
+            ${{ runner.os }}-eslint-${{ hashFiles('.eslintrc.cjs') }}
+          restore-keys: |
+            ${{ runner.os }}-eslint-
+      - name: Check typescript and lint
+        run: |
+          # bun run check
+          # bun run lint
+      - name: Build
+        run: |
+          export NODE_OPTIONS=--max-old-space-size=4096
+          bun run es
+      - name: Env
+        run: |
+          chmod 777 ./
+          touch deploy_key
+          echo "${{secrets.GG_SSH_PRIVATE_KEY}}" > deploy_key
+          chmod 600 ./deploy_key
+      - name: Deploy client
+        run: |
+          rsync -av --exclude='playwright/' --exclude='test-results/' --exclude='.git/' --exclude='.github/' --exclude='.husky/' --exclude='deploy_key' --exclude='i18n.sqlite' --include='.svelte-kit/'  -e 'ssh -i ./deploy_key -o StrictHostKeyChecking=no' --delete-delay ./ ${{ secrets.GG_SSH_URL }}:~/server/aisentence/
+      - name: Run DB Migration
+        run: |
+          ssh -i ./deploy_key -o StrictHostKeyChecking=no ${{ secrets.GG_SSH_URL }} "cd ~/server/ && ./ais-migrate.sh"
