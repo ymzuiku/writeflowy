@@ -5,8 +5,8 @@
 	import Goback from '$lib/components/goback.svelte';
 	import Skeleton from '$lib/components/skeleton.svelte';
 	import { catcher } from '$lib/helpers/catcher';
-	import { clipboardWrite } from '$lib/helpers/clipboard';
-	import { toastMessage, toastSuccess } from '$lib/helpers/toast';
+	import { copyWords } from '$lib/helpers/copy-words';
+	import { toastMessage } from '$lib/helpers/toast';
 	import { i18n } from '$lib/i18n';
 	import type { SentenceExplain } from '$lib/server/sentence/sentence';
 	import {
@@ -160,22 +160,6 @@
 		}
 	});
 
-	function splitSentenceIntoWords(sentence: string): string[] {
-		// 去掉标点符号，将句子中的字母数字字符和空格保留
-		const sanitizedSentence = sentence.replace(/[^\w\s]/g, '');
-		// 使用正则表达式匹配句子中的单词，\w+ 匹配一个或多个字母数字字符
-		const words: string[] = sanitizedSentence.match(/\w+/g) || [];
-		return words.filter((v) => v.length > 3);
-	}
-
-	function handleCopySenctents() {
-		if (!data.text) {
-			return;
-		}
-		const list = splitSentenceIntoWords(data.text).join(', ');
-		clipboardWrite(list);
-		toastSuccess(`Copy to clipboard: ${list}`);
-	}
 	const isSymbol = /^[^\w\s]+$/;
 </script>
 
@@ -199,12 +183,6 @@
 				on:click={() => ($memoryTap = 'Phrase')}
 			>
 				<iconify-icon icon="uil:pizza-slice" />
-			</button>
-			<button
-				class={twMerge(css.card, 'rounded-none text-gray-400')}
-				on:click={handleCopySenctents}
-			>
-				<iconify-icon icon="ci:copy" />
 			</button>
 			<div class={twMerge(css.selectBox, 'rounded-l-none')}>
 				<iconify-icon icon="lucide:speech" width="1.4rem" class="text-gray-400" />
@@ -283,6 +261,9 @@
 	<div class="flex flex-row items-center mb-1 gap-4 w-full">
 		<button class={twMerge(css.miniCard)} on:click={removeMember}>
 			<iconify-icon width="1.4rem" class="text-gray-400" icon="mdi:delete-outline" />
+		</button>
+		<button class={twMerge(css.miniCard)} on:click={() => copyWords(data.text)}>
+			<iconify-icon width="1.4rem" class="text-gray-400" icon="ci:copy" />
 		</button>
 		<div class="flex-1" />
 		<button on:click={() => ($loopPlay = !$loopPlay)} class={twMerge(css.miniCard)}>

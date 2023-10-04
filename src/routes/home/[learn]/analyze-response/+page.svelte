@@ -4,6 +4,7 @@
 	import Goback from '$lib/components/goback.svelte';
 	import Skeleton from '$lib/components/skeleton.svelte';
 	import { catcher } from '$lib/helpers/catcher';
+	import { copyWords } from '$lib/helpers/copy-words';
 	import { locationSearch } from '$lib/helpers/location-search';
 	import { toastMessage } from '$lib/helpers/toast';
 	import { i18n, i18nFromKey } from '$lib/i18n';
@@ -20,6 +21,7 @@
 	$: localTitleKey = ($user.local + 'Title') as 'zhTitle';
 
 	let loading = false;
+	let lastText = '';
 	let loaddingMore = false;
 	let analyzeId = locationSearch().get('id');
 	let audioLoaded: Record<string, string> = {};
@@ -48,7 +50,7 @@
 		if (!text) {
 			return;
 		}
-
+		lastText = text;
 		const button = e.currentTarget;
 		const nowAudio = button.querySelector('audio');
 		if (nowAudio) {
@@ -337,6 +339,9 @@
 	class="flex flex-col justify-center gap-4 p-4 pb-10 fixed w-full sm:max-w-2xl bottom-0 bg-white z-20 shadow-up"
 >
 	<div class="flex flex-row items-center mb-1 gap-4 w-full">
+		<button class={twMerge(css.miniCard)} on:click={() => copyWords(lastText)}>
+			<iconify-icon width="1.4rem" class="text-gray-400" icon="ci:copy" />
+		</button>
 		<div class="flex-1" />
 		<button on:click={() => ($loopPlay = !$loopPlay)} class={twMerge(css.miniCard)}>
 			<iconify-icon

@@ -6,6 +6,7 @@
 	import Skeleton from '$lib/components/skeleton.svelte';
 	import Tab from '$lib/components/tab.svelte';
 	import { catcher } from '$lib/helpers/catcher';
+	import { copyWords } from '$lib/helpers/copy-words';
 	import { toastMessage } from '$lib/helpers/toast';
 
 	import { i18n } from '$lib/i18n';
@@ -28,6 +29,7 @@
 	let lastPlayAudio: HTMLAudioElement | null;
 	let loading = false;
 	let limit = 15;
+	let lastText = '';
 	let offset = 0;
 	let memorys: Awaited<MemorysOutput>['list'] = [];
 	let data: Awaited<MemorysOutput>['list'][0] | null = null;
@@ -126,8 +128,8 @@
 		if (!memory) {
 			return;
 		}
-
 		const text = memory.text;
+		lastText = text;
 
 		const button = e.currentTarget;
 		const nowAudio = button.querySelector('audio');
@@ -316,6 +318,9 @@
 		<div class="flex flex-row items-center mb-1 gap-4 w-full">
 			<button class={twMerge(css.miniCard)} on:click={removeMember}>
 				<iconify-icon width="1.4rem" class="text-gray-400" icon="mdi:delete-outline" />
+			</button>
+			<button class={twMerge(css.miniCard)} on:click={() => copyWords(lastText)}>
+				<iconify-icon width="1.4rem" class="text-gray-400" icon="ci:copy" />
 			</button>
 			<div class="flex-1" />
 			<button on:click={() => ($loopPlay = !$loopPlay)} class={twMerge(css.miniCard)}>
