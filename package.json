@@ -69,6 +69,7 @@
 		"@zerodevx/svelte-toast": "^0.9.5",
 		"aws-sdk": "^2.1458.0",
 		"dayjs": "^1.11.9",
+		"dotenv": "^16.3.1",
 		"google-auth-library": "^9.0.0",
 		"howler": "^2.2.3",
 		"nightwind": "^1.1.13",

@@ -1,3 +1,4 @@
+import { config } from 'dotenv';
 import OpenAI from 'openai';
 import type { RequestOptions } from 'openai/core';
 import type {
@@ -6,6 +7,7 @@ import type {
 } from 'openai/resources/chat';
 export let openai: OpenAI;
 
+config();
 // type Model =
 // 	| 'gpt-4'
 // 	| 'gpt-4-0314'

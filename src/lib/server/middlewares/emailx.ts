@@ -1,5 +1,6 @@
+import { config } from 'dotenv';
 import nodemailer from 'nodemailer';
-
+config();
 interface Emailx {
 	title: string;
 	email: string;
