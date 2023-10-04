@@ -314,9 +314,13 @@
 					handleUpdateMemory(0.08);
 				}}
 				disabled={loading}
-				class={twMerge(css.miniCard)}
+				class={twMerge(css.miniCard, 'disabled:pointer-events-none')}
 			>
-				<iconify-icon icon="icon-park-outline:brain" width="1.4rem" class={'text-gray-400'} />
+				{#if loading}
+					<iconify-icon icon="iline-md:loading-loop" width="1.4rem" class={'text-gray-400'} />
+				{:else}
+					<iconify-icon icon="icon-park-outline:brain" width="1.4rem" class={'text-gray-400'} />
+				{/if}
 			</button>
 		{/if}
 	</div>

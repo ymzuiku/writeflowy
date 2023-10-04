@@ -118,3 +118,13 @@ model Order {
   @@index([orderId])
   @@index([userId])
 }
+
+model LikeAnalyze {
+  id        Int      @id @default(autoincrement())
+  created   DateTime @default(now())
+  updated   DateTime @default(now()) @updatedAt
+  userId    Int
+  analyzeId Int
+
+  @@unique([analyzeId, userId])
+}

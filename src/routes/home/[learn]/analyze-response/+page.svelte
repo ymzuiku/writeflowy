@@ -8,10 +8,13 @@
 	import { toastMessage } from '$lib/helpers/toast';
 	import { i18n, i18nFromKey } from '$lib/i18n';
 	import type { AnalyzeClient } from '$lib/server/sentence/analyze';
+	import { loopPlay, speechPeople, speedAudio, speeds } from '$lib/stores/brain-store';
 	import { lastType, movieText, paragraphText, sceneText } from '$lib/stores/last-edit';
+	import { sentenceDb } from '$lib/stores/sentence-db';
 	import { user } from '$lib/stores/user';
 	import { trpc } from '$lib/trpc-client';
-	import { onMount } from 'svelte';
+	import { onMount, tick } from 'svelte';
+	import { twMerge } from 'tailwind-merge';
 
 	$: titleKey = ($user.learn + 'Title') as 'enTitle';
 	$: localTitleKey = ($user.local + 'Title') as 'zhTitle';
@@ -19,10 +22,10 @@
 	let loading = false;
 	let loaddingMore = false;
 	let analyzeId = locationSearch().get('id');
+	let audioLoaded: Record<string, string> = {};
 
 	let analyze: AnalyzeClient;
 	let error = '';
-	let memoryIds: Record<string, { memoryId: number; sentenceId: number }> = {};
 	let learing = new Set();
 	let lastEdit = (() => {
 		if ($lastType === 'scene') {
@@ -33,6 +36,55 @@
 		}
 		return $paragraphText;
 	})();
+
+	let lastPlayAudio: HTMLAudioElement | null;
+
+	function getCacheKey(sentence: AnalyzeClient['answer'][0]) {
+		return sentence.en;
+		// return JSON.stringify({ en: sentence.en, d: sentence.difficulty, m: sentence.memorization });
+	}
+
+	const handleSpeech = async (e: { currentTarget: HTMLElement }, text?: string) => {
+		if (!text) {
+			return;
+		}
+
+		const button = e.currentTarget;
+		const nowAudio = button.querySelector('audio');
+		if (nowAudio) {
+			if (lastPlayAudio === nowAudio) {
+				nowAudio.currentTime = 0.01;
+				nowAudio.pause();
+				lastPlayAudio = null;
+				return;
+			}
+			lastPlayAudio = nowAudio;
+		}
+		audioLoaded = {
+			...audioLoaded,
+			[text]: `/brain/audio?${new URLSearchParams({
+				text: text || '',
+				people: $speechPeople,
+				learn: $user.learn,
+			}).toString()}`,
+		};
+		await tick();
+
+		document.querySelectorAll('audio').forEach((audio) => {
+			if (!audio.paused && audio !== nowAudio) {
+				audio.currentTime = 0.01;
+				audio.pause();
+			}
+		});
+		if (nowAudio) {
+			nowAudio.load();
+			nowAudio.playbackRate = $speedAudio;
+			nowAudio.volume = 1;
+			nowAudio.currentTime = 0.01;
+			nowAudio.play();
+			nowAudio.currentTime = 0.01;
+		}
+	};
 
 	async function handleReload() {
 		error = '';
@@ -60,6 +112,14 @@
 			return;
 		}
 		analyze = res as unknown as AnalyzeClient;
+		analyze.answer.forEach((sentence) => {
+			sentenceDb.get(getCacheKey(sentence)).then((res) => {
+				if (res) {
+					learing.add(sentence[learn]);
+					learing = learing;
+				}
+			});
+		});
 	}
 	onMount(() => {
 		handleReload();
@@ -68,51 +128,39 @@
 	$: learn = $user.learn as 'en';
 	$: local = $user.local as 'zh';
 
-	async function handleAddLearn(text: string) {
+	async function handleAddLearn(text: string, event: { currentTarget: HTMLElement }) {
 		const nowSentence = analyze.answer.find((v) => v[learn] === text);
 		if (!nowSentence || nowSentence.loading) {
 			return;
 		}
+		handleSpeech(event, text);
 		if (learing.has(text)) {
-			if (memoryIds[nowSentence[learn]]) {
-				await catcher(
-					trpc.deleteMemory.mutate({
-						auth: user.getAuth(),
-						memoryId: memoryIds[nowSentence[learn]]!.memoryId,
-						noFrist: true,
-					}),
-				);
-			}
-
-			learing.delete(text);
-			learing = learing;
-		} else {
-			nowSentence.loading = true;
-			analyze = analyze;
-			const res = await catcher(
-				trpc.sentence.mutate({
-					auth: user.getAuth(),
-					sentence: nowSentence[learn],
-					translate: nowSentence[local],
-					difficulty: nowSentence.difficulty || 0.2,
-					memorization: nowSentence.memorization || 0.3,
-					learn: $user.learn as 'en',
-					local: $user.local as 'zh',
-				}),
-			);
-
-			nowSentence.loading = false;
-			analyze = analyze;
-			if ('rejected' in res) {
-				toastMessage(res);
-				return;
-			}
-			memoryIds[nowSentence[learn]] = {
-				memoryId: res.memoryId,
-				sentenceId: res.id,
-			};
-			learing = learing.add(text);
+			return;
 		}
+
+		nowSentence.loading = true;
+		analyze = analyze;
+		const res = await catcher(
+			trpc.sentence.mutate({
+				auth: user.getAuth(),
+				sentence: nowSentence[learn],
+				translate: nowSentence[local],
+				difficulty: nowSentence.difficulty || 0.2,
+				memorization: nowSentence.memorization || 0.3,
+				learn: $user.learn as 'en',
+				local: $user.local as 'zh',
+			}),
+		);
+
+		nowSentence.loading = false;
+		analyze = analyze;
+		if ('rejected' in res) {
+			toastMessage(res);
+			return;
+		}
+
+		learing = learing.add(text);
+		sentenceDb.set(getCacheKey(nowSentence), { sentenceId: res.id, memoryId: res.memoryId });
 	}
 	async function showMore() {
 		if (loaddingMore) {
@@ -138,7 +186,11 @@
 
 <Goback>
 	{#if !loading}
-		<a href="/brain" aria-label="add memory" class={css.button}>
+		<div class="flex-1" />
+		<!-- <button class={twMerge(css.button, 'h-9 mr-2')}>
+			<iconify-icon width="20" icon="ph:star-bold" />
+		</button> -->
+		<a href="/brain" aria-label="add memory" class={twMerge(css.button, 'h-9')}>
 			{i18n`返回大脑页面`} ({learing.size})
 		</a>
 	{/if}
@@ -194,10 +246,11 @@
 				class="{css.card} {learing.has(item[learn])
 					? 'border-primary-600'
 					: 'border-gray-300'} ring-primary-700"
-				on:click={() => {
-					handleAddLearn(item[learn]);
+				on:click={(e) => {
+					handleAddLearn(item[learn], e);
 				}}
 			>
+				<audio class="pointer-events-none" src={audioLoaded[item[learn] || '']} />
 				<div class="flex flex-row justify-between items-center">
 					<div class="flex flex-row">
 						<div
@@ -208,26 +261,33 @@
 						<p>{item[learn]}</p>
 					</div>
 					<div class="ml-3 h-10">
-						<button
-							class={learing.has(item[learn]) ? css.miniCard : ''}
-							on:click|stopPropagation|preventDefault={() => {
-								if (learing.has(item[learn]) && memoryIds[item[learn]]) {
-									const mem = memoryIds[item[learn]];
-									goto(`/brain/${mem.memoryId}/${mem.sentenceId}/0`);
-								}
-							}}
+						<div class="flex flex-row">
+							<button
+								class={learing.has(item[learn]) ? css.miniCard : ''}
+								on:click|stopPropagation|preventDefault={() => {
+									sentenceDb.get(getCacheKey(item)).then((res) => {
+										if (res) {
+											goto(`/brain/${res.memoryId}/${res.sentenceId}/0`);
+										}
+									});
+								}}
+							>
+								<iconify-icon
+									width="1.2rem"
+									class={learing.has(item[learn]) ? 'text-primary-500' : 'text-gray-500'}
+									icon={item.loading
+										? 'line-md:loading-loop'
+										: learing.has(item[learn])
+										? 'carbon:view'
+										: 'mdi:magic'}
+								/>
+							</button>
+						</div>
+						<div
+							class="text-[0.7rem] text-gray-500 text-center mt-4 {item.loading
+								? 'opacity-1'
+								: 'opacity-0'}"
 						>
-							<iconify-icon
-								width="1.2rem"
-								class={learing.has(item[learn]) ? 'text-primary-500' : 'text-gray-500'}
-								icon={item.loading
-									? 'line-md:loading-loop'
-									: learing.has(item[learn])
-									? 'carbon:view'
-									: 'fluent:add-12-regular'}
-							/>
-						</button>
-						<div class="text-[0.7rem] text-gray-500 {item.loading ? 'opacity-1' : 'opacity-0'}">
 							15s
 						</div>
 					</div>
@@ -270,3 +330,62 @@
 		</div>
 	{/if}
 {/if}
+
+<div class="h-24" />
+
+<div
+	class="flex flex-col justify-center gap-4 p-4 pb-10 fixed w-full sm:max-w-2xl bottom-0 bg-white z-20 shadow-up"
+>
+	<div class="flex flex-row items-center mb-1 gap-4 w-full">
+		<div class="flex-1" />
+		<button on:click={() => ($loopPlay = !$loopPlay)} class={twMerge(css.miniCard)}>
+			<iconify-icon
+				icon="eos-icons:infinity"
+				width="1.3rem"
+				class={$loopPlay ? 'text-primary-500' : 'text-gray-400'}
+			/>
+		</button>
+
+		<div class="inline-flex rounded-md">
+			<button
+				class={twMerge(css.miniCard, '-mr-0 rounded-r-none')}
+				on:click={() => ($speedAudio = 0.26)}
+			>
+				<iconify-icon
+					icon="lucide:snail"
+					width="1.4rem"
+					class={$speedAudio === 0.26 ? 'text-primary-500' : 'text-gray-400'}
+				/>
+			</button>
+			{#each speeds as item}
+				<button
+					aria-current="page"
+					class="{twMerge(css.miniCard, 'rounded-none px-2')} {$speedAudio === item
+						? 'text-primary-500'
+						: 'text-gray-400'}"
+					on:click={() => ($speedAudio = item)}
+				>
+					{#if item === 1}
+						<iconify-icon width="1.4rem" icon="tabler:walk" />
+					{:else if item === 0.75}
+						<iconify-icon width="1.4rem" icon="ic:round-assist-walker" />
+					{:else if item === 0.5}
+						<iconify-icon width="1.9rem" icon="fluent:animal-turtle-16-regular" />
+					{:else}
+						{item}
+					{/if}
+				</button>
+			{/each}
+			<button
+				class={twMerge(css.miniCard, '-mr-0 rounded-l-none')}
+				on:click={() => ($speedAudio = 1.25)}
+			>
+				<iconify-icon
+					icon="fluent:animal-rabbit-16-regular"
+					width="1.6rem"
+					class={$speedAudio === 1.25 ? 'text-primary-500' : 'text-gray-400'}
+				/>
+			</button>
+		</div>
+	</div>
+</div>

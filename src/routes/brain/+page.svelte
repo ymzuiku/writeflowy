@@ -285,7 +285,7 @@
 							<button
 								class={twMerge(
 									css.miniCard,
-									'ml-3 text-gray-400 disabled:text-gray-200 disabled:opacity-75',
+									'ml-3 text-gray-400 disabled:text-gray-200 disabled:opacity-75 disabled:pointer-events-none',
 								)}
 								disabled={loading}
 								on:click|stopPropagation={() => {
@@ -314,6 +314,9 @@
 		class="flex flex-col justify-center gap-4 p-4 pb-4 sm:pb-10 fixed w-full sm:max-w-2xl bottom-20 sm:bottom-0 bg-white z-20 shadow-up"
 	>
 		<div class="flex flex-row items-center mb-1 gap-4 w-full">
+			<button class={twMerge(css.miniCard)} on:click={removeMember}>
+				<iconify-icon width="1.4rem" class="text-gray-400" icon="mdi:delete-outline" />
+			</button>
 			<div class="flex-1" />
 			<button on:click={() => ($loopPlay = !$loopPlay)} class={twMerge(css.miniCard)}>
 				<iconify-icon
@@ -364,9 +367,6 @@
 					/>
 				</button>
 			</div>
-			<button class={twMerge(css.miniCard)} on:click={removeMember}>
-				<iconify-icon width="1.4rem" class="text-gray-400" icon="mdi:delete-outline" />
-			</button>
 		</div>
 	</div>
 {/if}

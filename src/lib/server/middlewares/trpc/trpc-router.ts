@@ -1,3 +1,16 @@
+import { addLikeAnalyze, zodAddLikeAnalyzeInput } from '$lib/server/like-analyze/add-like-analyze';
+import {
+	checkLikeAnalyze,
+	zodCheckLikeAnalyzeInput,
+} from '$lib/server/like-analyze/check-like-analyze';
+import {
+	listLikeAnalyze,
+	zodListLikeAnalyzeInput,
+} from '$lib/server/like-analyze/list-like-analyze';
+import {
+	removeLikeAnalyze,
+	zodRemoveLikeAnalyzeInput,
+} from '$lib/server/like-analyze/remove-like-analyze';
 import { checkLogin, zodCheckLoginInput } from '$lib/server/login/check-login';
 import { forgetPassword, zodForgetPasswordInput } from '$lib/server/login/forget-password';
 import { login, zodLoginInput } from '$lib/server/login/login';
@@ -13,6 +26,7 @@ import { memorys, zodMemorysInput } from '$lib/server/memory/memorys';
 import { updateMemory, zodUpdateMemoryInput } from '$lib/server/memory/update-memory';
 import { getVipDays } from '$lib/server/order/get-vip-days';
 import { removeSubscrib, zodRemoveSubscribInput } from '$lib/server/order/remove-subscribe';
+import { addMemory, zodAddMemoryInput } from '$lib/server/sentence/add-memory';
 import { analyze, zodAnalyzeInput } from '$lib/server/sentence/analyze';
 import { analyzeMovie, zodAnalyzeMovieInput } from '$lib/server/sentence/analyze-movie';
 import { getAnalyzes, zodGetAnalyzesInput } from '$lib/server/sentence/get-analyzes';
@@ -45,6 +59,11 @@ export const router = t.router({
 	updateInfomation: input(zodUpdateInfomationInput).mutation((v) => updateInfomation(v.input)),
 	getVipDays: input(zodAuth).mutation((v) => getVipDays(v.input)),
 	removeSubscrib: input(zodRemoveSubscribInput).mutation((v) => removeSubscrib(v.input)),
+	listLikeAnalyze: input(zodListLikeAnalyzeInput).mutation((v) => listLikeAnalyze(v.input)),
+	addLikeAnalyze: input(zodAddLikeAnalyzeInput).mutation((v) => addLikeAnalyze(v.input)),
+	removeLikeAnalyze: input(zodRemoveLikeAnalyzeInput).mutation((v) => removeLikeAnalyze(v.input)),
+	checkLikeAnalyze: input(zodCheckLikeAnalyzeInput).mutation((v) => checkLikeAnalyze(v.input)),
+	addMemory: input(zodAddMemoryInput).mutation((v) => addMemory(v.input)),
 });
 
 export type Router = typeof router;
