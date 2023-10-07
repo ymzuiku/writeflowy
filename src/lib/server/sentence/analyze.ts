@@ -151,17 +151,29 @@ export async function analyze(input: AnalyzeInput): Promise<AnalyzeClient> {
 			if (!old.hashQuestion) {
 				throw i18nKey('历史hash未找到');
 			}
-			const answer = await s3
-				.getObject({ Bucket: AWS_S3_SENTENCES, Key: old.hashQuestion! })
-				.promise();
-
-			if (!answer.Body) {
-				throw i18nKey('未找到历史分析信息');
+			try {
+				const answer = await s3
+					.getObject({ Bucket: AWS_S3_SENTENCES, Key: old.hashQuestion! })
+					.promise();
+				if (!answer.Body) {
+					throw i18nKey('未找到历史分析信息');
+				}
+				return {
+					...old,
+					answer: JSON.parse(String(answer.Body)),
+				} as unknown as AnalyzeClient;
+				// eslint-disable-next-line @typescript-eslint/no-explicit-any
+			} catch (err: any) {
+				if (err?.message?.indexOf('specified key does') > 0) {
+					await prisma.analyze.delete({
+						where: {
+							id: old.id,
+						},
+					});
+					throw i18nKey('未找到历史分析信息');
+				}
+				throw err;
 			}
-			return {
-				...old,
-				answer: JSON.parse(String(answer.Body)),
-			} as unknown as AnalyzeClient;
 		}
 	}
 
