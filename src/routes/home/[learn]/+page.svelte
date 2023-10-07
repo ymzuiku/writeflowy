@@ -142,7 +142,7 @@
 						<img
 							alt={item[titleKey]}
 							src={item.image}
-							class="w-40 h-28 object-cover mr-6 rounded-lg"
+							class="w-[160px] min-w-[160px] h-28 object-cover mr-6 rounded-lg"
 						/>
 					{/if}
 					<div>
