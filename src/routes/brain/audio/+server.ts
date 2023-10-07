@@ -1,3 +1,4 @@
+import { getEnv } from '$lib/helpers/get-env.js';
 import { i18nKey } from '$lib/i18n';
 import aws from 'aws-sdk';
 
@@ -14,9 +15,9 @@ const lngCodeMap = {
 export const GET = async ({ url, setHeaders }) => {
 	if (!polly) {
 		polly = new aws.Polly({
-			accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-			secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-			region: process.env.AWS_REGION2,
+			accessKeyId: getEnv('AWS_ACCESS_KEY_ID'),
+			secretAccessKey: getEnv('AWS_SECRET_ACCESS_KEY'),
+			region: getEnv('AWS_REGION2'),
 		});
 	}
 

@@ -1,4 +1,4 @@
-import { config } from 'dotenv';
+import { getEnv } from '$lib/helpers/get-env';
 import OpenAI from 'openai';
 import type { RequestOptions } from 'openai/core';
 import type {
@@ -7,7 +7,6 @@ import type {
 } from 'openai/resources/chat';
 export let openai: OpenAI;
 
-config();
 // type Model =
 // 	| 'gpt-4'
 // 	| 'gpt-4-0314'
@@ -27,7 +26,7 @@ export async function openaiChat(
 ) {
 	if (!openai) {
 		openai = new OpenAI({
-			apiKey: process.env.OPENAI_CLIENT,
+			apiKey: getEnv('OPENAI_CLIENT'),
 		});
 	}
 	try {
@@ -45,7 +44,7 @@ export async function openaiStream(
 ) {
 	if (!openai) {
 		openai = new OpenAI({
-			apiKey: process.env.OPENAI_CLIENT,
+			apiKey: getEnv('OPENAI_CLIENT'),
 		});
 	}
 	try {

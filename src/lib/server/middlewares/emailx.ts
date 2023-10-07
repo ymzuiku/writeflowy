@@ -1,6 +1,5 @@
-import { config } from 'dotenv';
+import { getEnv } from '$lib/helpers/get-env';
 import nodemailer from 'nodemailer';
-config();
 interface Emailx {
 	title: string;
 	email: string;
@@ -13,10 +12,10 @@ let _transport: any;
 let user: string;
 const getTransport = () => {
 	if (!_transport) {
-		const host = process.env['SMTP_HOST']!;
-		const port = process.env['SMTP_PORT']!;
-		user = process.env['SMTP_FROM']!;
-		const pwd = process.env['SMTP_PWD']!;
+		const host = getEnv('SMTP_HOST');
+		const port = getEnv('SMTP_PORT');
+		user = getEnv('SMTP_FROM');
+		const pwd = getEnv('SMTP_PWD');
 		if (!host || !port || !user || !pwd) {
 			throw new Error(`emailx not have host:${host}, port:${port}, user:${user}, pass`);
 		}

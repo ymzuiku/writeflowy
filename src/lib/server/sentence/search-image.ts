@@ -1,7 +1,9 @@
+import { getEnv } from '$lib/helpers/get-env';
+
 const unsplashURL = 'https://api.unsplash.com';
 const unsplashSearchURL = unsplashURL + '/search/photos';
 
-const unsplashAccessKey = process.env.unsplash_access;
+const unsplashAccessKey = getEnv('unsplash_access');
 
 export async function searchImage(query: string) {
 	const url = `${unsplashSearchURL}?query=${query}&page=1&per_page=3&orientation=landscape`;
