@@ -9,8 +9,16 @@
 	let times = storable(id + '__times', 0);
 	export let tabindex = 1;
 	let buttonTabindex = tabindex - 1;
+	let sending = false;
 
 	async function sendCode() {
+		if (sending) {
+			return;
+		}
+		sending = true;
+		setTimeout(() => {
+			sending = false;
+		}, 5000);
 		if (await Promise.resolve(onClick())) {
 			$times = 60;
 			sendCodeWait($times, (t) => {
