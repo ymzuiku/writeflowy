@@ -23,7 +23,7 @@ jobs:
       - name: Install dependencies
         run: |
           bun install
-          bun run prisma:init
+          bun prisma generate
       - name: ESLint cache
         uses: actions/cache@v3
         with:
@@ -39,7 +39,7 @@ jobs:
       - name: Build
         run: |
           export NODE_OPTIONS=--max-old-space-size=4096
-          bun run prod
+          bun run es
       - name: Env
         run: |
           chmod 777 ./
@@ -48,7 +48,10 @@ jobs:
           chmod 600 ./deploy_key
       - name: Deploy client
         run: |
-          rsync -av  -e 'ssh -i ./deploy_key -o StrictHostKeyChecking=no' --delete-delay ./build/* ${{ secrets.GG_SSH_URL }}:~/server/aisentence/
+          rsync -av --exclude='playwright/' --exclude='test-results/' --exclude='.git/' --exclude='.github/' --exclude='.husky/' --exclude='deploy_key' --exclude='i18n.sqlite' --include='.svelte-kit/'  -e 'ssh -i ./deploy_key -o StrictHostKeyChecking=no' --delete-delay ./ ${{ secrets.GG_SSH_URL }}:~/server/aisentence/
       - name: Run DB Migration
         run: |
-          ssh -i ./deploy_key -o StrictHostKeyChecking=no ${{ secrets.GG_SSH_URL }} "cd ~/server/aisentence/ && ./migrate.sh"
+          ssh -i ./deploy_key -o StrictHostKeyChecking=no ${{ secrets.GG_SSH_URL }} "cd ~/server/ && ./ais-migrate.sh"
+      - name: Delete other
+        run: |
+          rm -r ./deploy_key
