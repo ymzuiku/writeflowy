@@ -51,4 +51,4 @@ jobs:
           rsync -av  -e 'ssh -i ./deploy_key -o StrictHostKeyChecking=no' --delete-delay ./build/* ${{ secrets.GG_SSH_URL }}:~/server/aisentence/
       - name: Run DB Migration
         run: |
-          ssh -i ./deploy_key -o StrictHostKeyChecking=no ${{ secrets.GG_SSH_URL }} "cd ~/server/aisentence/ && ./ais-migrate.sh"
+          ssh -i ./deploy_key -o StrictHostKeyChecking=no ${{ secrets.GG_SSH_URL }} "cd ~/server/ && ./ais-migrate.sh"
