@@ -2,6 +2,7 @@
 	import { sendCodeWait } from '$lib/helpers/send-code-wait';
 	import { i18n } from '$lib/i18n';
 	import { storable } from '$lib/stores/storable';
+	import { onMount } from 'svelte';
 
 	export let value = '';
 	export let onClick = async () => true;
@@ -10,6 +11,12 @@
 	export let tabindex = 1;
 	let buttonTabindex = tabindex - 1;
 	let sending = false;
+	let nowTimes = 0;
+	onMount(() => {
+		sendCodeWait($times, (t) => {
+			nowTimes = t;
+		});
+	});
 
 	async function sendCode() {
 		if (sending) {
@@ -20,9 +27,9 @@
 			sending = false;
 		}, 5000);
 		if (await Promise.resolve(onClick())) {
-			$times = 60;
-			sendCodeWait($times, (t) => {
-				$times = t;
+			$times = Date.now();
+			sendCodeWait(Date.now(), (t) => {
+				nowTimes = t;
 			});
 		}
 	}
@@ -41,7 +48,7 @@
 			type="code"
 			class="border-0 ring-0 focus:ring-0 outline-none"
 		/>
-		{#if $times > 0}
+		{#if nowTimes > 0}
 			<button
 				tabindex={buttonTabindex}
 				type="button"
@@ -49,15 +56,16 @@
 				disabled
 				class="flex flex-1 justify-center cursor-not-allowed rounded-md bg-gray-400 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600"
 			>
-				{$times}s
+				{nowTimes}s
 			</button>
 		{:else}
 			<button
 				tabindex={buttonTabindex}
 				type="button"
+				disabled={sending}
 				aria-label="send code"
 				on:click={sendCode}
-				class="flex flex-1 justify-center rounded-md bg-primary-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-primary-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600"
+				class="flex flex-1 justify-center rounded-md bg-primary-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-primary-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 disabled:opacity-30 disabled:pointer-events-none"
 			>
 				{i18n`发送验证码`}
 			</button>

@@ -1,8 +1,12 @@
 export function sendCodeWait(times: number, event: (times: number) => void) {
-	event(times);
-	if (times > 0) {
+	if (times === 0) {
+		return;
+	}
+	const nowTimes = 60 - ~~((Date.now() - times) / 1000);
+	event(nowTimes);
+	if (nowTimes > 0) {
 		setTimeout(() => {
-			sendCodeWait(times - 1, event);
+			sendCodeWait(times, event);
 		}, 1000);
 	}
 }
