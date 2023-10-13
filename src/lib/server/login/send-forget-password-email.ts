@@ -16,6 +16,7 @@ export async function sendForgtpasswordEmail(input: SendForgtpasswordEmailInput)
 	const hasLastCode = await redisx.get(SEND_FORGET_PASSWORD_EMAIL + input.email);
 
 	if (hasLastCode) {
+		console.log('the code:', hasLastCode);
 		throw new Error(i18nKey('你刚刚已发送过邮件，请查收邮箱'));
 	}
 	const old = await prisma.user.findFirst({
@@ -40,7 +41,7 @@ export async function sendForgtpasswordEmail(input: SendForgtpasswordEmailInput)
 
 	await redisx.setEx(
 		SEND_FORGET_PASSWORD_EMAIL + input.email,
-		DEV ? 10 * 1000 : 60 * 30 * 1000,
+		DEV ? 10 * 1000 : 60 * 10 * 1000,
 		code,
 	);
 	return { message: i18nKey('已发送邮件'), ok: 1 };

@@ -29,6 +29,6 @@ export async function sendSignUpEmail(input: SendSignUpEmailInput) {
 		}
 	}
 
-	await redisx.setEx(SEND_REGISTER_EMAIL + input.email, DEV ? 10 * 1000 : 60 * 30 * 1000, code);
+	await redisx.setEx(SEND_REGISTER_EMAIL + input.email, DEV ? 10 * 1000 : 60 * 10 * 1000, code);
 	return { message: i18nKey('已发送邮件'), ok: 1 };
 }
