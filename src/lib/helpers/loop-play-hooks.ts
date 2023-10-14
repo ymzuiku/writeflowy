@@ -11,8 +11,11 @@ export function loopPlayHooks() {
 
 	onMount(() => {
 		if (browser) {
+			let nextAudio: HTMLAudioElement | null;
 			loopUpdateTimer = setInterval(() => {
 				if (speechCache.lastAudio?.paused) {
+					scrollToElement(nextAudio?.parentElement?.parentElement);
+
 					if (get(speechConnect)) {
 						// eslint-disable-next-line @typescript-eslint/no-explicit-any
 						if ((speechCache.lastAudio as any).nowConnect === void 0) {
@@ -20,11 +23,16 @@ export function loopPlayHooks() {
 						}
 						// eslint-disable-next-line @typescript-eslint/no-explicit-any
 						const connectId = (speechCache.lastAudio as any).nowConnect + 1;
-						const nextAudio = document.querySelector(
+						if (nextAudio?.parentElement) {
+							nextAudio.parentElement.style.border = 'none';
+						}
+						nextAudio = document.querySelector(
 							`[data-connect-audio="${connectId}"]`,
 						) as HTMLAudioElement;
 						if (nextAudio) {
-							scrollToElement(nextAudio.parentElement?.parentElement);
+							if (nextAudio?.parentElement) {
+								nextAudio.parentElement.style.border = '1px solid #33f';
+							}
 							const src = `/brain/audio?${new URLSearchParams({
 								text: nextAudio.getAttribute('data-text') || '',
 								people: get(speechPeople),
