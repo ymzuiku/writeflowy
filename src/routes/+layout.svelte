@@ -24,6 +24,8 @@
 			preloadCode('/brain');
 			preloadCode('/brain/[memoryId]/[sentenceId]/[memorabillity]');
 			preloadCode('/setting');
+			preloadCode('/article');
+			preloadCode('/article/learn');
 			preloadCode('/setting/update-infomation');
 		}
 	});

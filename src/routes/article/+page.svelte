@@ -8,8 +8,8 @@
 
 <main id="setting" aria-label="setting page" class="flex flex-col p-4 min-h-full h-full gap-4">
 	<h2 class="text-xl font-semibold">{i18n`文章`}</h2>
-	<textarea bind:value={$article} class={twMerge(css.input, 'h-[calc(100vh-300px)]')} />
-	<a class={twMerge(css.button, 'w-full sm:max-w-full')} href="/article/learn">
+	<textarea bind:value={$article} class={twMerge(css.input, 'h-[calc(100vh-350px)]')} />
+	<a class={twMerge(css.button, 'w-full sm:max-w-full h-12')} href="/article/learn">
 		{i18n`学习这段内容`}
 	</a>
 </main>
