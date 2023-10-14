@@ -22,7 +22,7 @@
 		const rect = element.getBoundingClientRect();
 		const windowHeight = window.innerHeight || document.documentElement.clientHeight;
 
-		if (rect.top >= 0 && rect.bottom <= windowHeight) {
+		if (rect.top >= -windowHeight && rect.bottom <= windowHeight * 2) {
 			isVisible = true;
 		} else {
 			isVisible = false;

@@ -15,7 +15,7 @@
 
 		if (nowAudio && !connectNext) {
 			if (speechCache.lastAudio === nowAudio) {
-				nowAudio.currentTime = 0.01;
+				nowAudio.currentTime = 0.05;
 				nowAudio.pause();
 				speechCache.lastAudio = null;
 				return;
@@ -37,7 +37,7 @@
 
 		document.querySelectorAll('audio').forEach((audio) => {
 			if (!audio.paused && audio !== nowAudio) {
-				audio.currentTime = 0.1;
+				audio.currentTime = 0.05;
 				audio.pause();
 			}
 		});
@@ -45,9 +45,9 @@
 			nowAudio.load();
 			nowAudio.playbackRate = $speedAudio;
 			nowAudio.volume = 1;
-			nowAudio.currentTime = 0.1;
+			nowAudio.currentTime = 0.05;
 			nowAudio.play();
-			nowAudio.currentTime = 0.1;
+			nowAudio.currentTime = 0.05;
 		}
 	};
 

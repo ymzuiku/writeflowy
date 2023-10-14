@@ -19,9 +19,7 @@ export function loopPlayHooks() {
 							return;
 						}
 						// eslint-disable-next-line @typescript-eslint/no-explicit-any
-						(speechCache.lastAudio as any).nowConnect += 1;
-						// eslint-disable-next-line @typescript-eslint/no-explicit-any
-						const connectId = (speechCache.lastAudio as any).nowConnect;
+						const connectId = (speechCache.lastAudio as any).nowConnect + 1;
 						const nextAudio = document.querySelector(
 							`[data-connect-audio="${connectId}"]`,
 						) as HTMLAudioElement;
@@ -35,18 +33,20 @@ export function loopPlayHooks() {
 							if (speechCache.lastAudio.src === src) {
 								return;
 							}
+							// eslint-disable-next-line @typescript-eslint/no-explicit-any
+							(speechCache.lastAudio as any).nowConnect += 1;
 							speechCache.lastAudio.src = src;
 							speechCache.lastAudio.load();
 							speechCache.lastAudio.playbackRate = get(speedAudio);
-							speechCache.lastAudio.currentTime = 0.1;
+							speechCache.lastAudio.currentTime = 0.05;
 							speechCache.lastAudio.play();
 						}
 					} else if (get(loopPlay)) {
-						speechCache.lastAudio.currentTime = 0.1;
+						speechCache.lastAudio.currentTime = 0.05;
 						speechCache.lastAudio.playbackRate = 1;
 						speechCache.lastAudio.pause();
 						speechCache.lastAudio.load();
-						speechCache.lastAudio.currentTime = 0.1;
+						speechCache.lastAudio.currentTime = 0.05;
 						speechCache.lastAudio.playbackRate = get(speedAudio);
 						speechCache.lastAudio.play();
 					} else {
@@ -54,7 +54,7 @@ export function loopPlayHooks() {
 						speechCache.lastAudio = null;
 					}
 				}
-			}, 100);
+			}, 600);
 		}
 	});
 	onDestroy(() => {
