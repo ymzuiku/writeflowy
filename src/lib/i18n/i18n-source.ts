@@ -195,6 +195,7 @@ export const i18nSource = {
 		es: 'Agregar palabra',
 		fr: 'Ajouter un mot',
 	},
+	文章: { zh: '文章', en: 'Article', jp: '記事', es: 'Artículo', fr: 'Article' },
 	我的大脑: { zh: '我的大脑', en: 'My brain', jp: '私の脳', es: 'Mi cerebro', fr: 'Mon cerveau' },
 	设置: { zh: '设置', en: 'Settings', jp: '設定', es: 'Configuración', fr: 'Paramètres' },
 	我要学习英语: {
@@ -298,6 +299,13 @@ export const i18nSource = {
 		jp: 'AIが提供する情報の内容、推奨、およびネイティブ言語の翻訳を生成しています。約30秒かかります。',
 		es: 'El AI está generando contenido, recomendaciones y traducciones en el idioma nativo para usted. Tomará aproximadamente 30 segundos.',
 		fr: "L'IA génère du contenu, des recommandations et des traductions dans votre langue maternelle. Cela prendra environ 30 secondes.",
+	},
+	您的VIP已过期: {
+		zh: '您的VIP已过期',
+		en: 'Your VIP has expired',
+		jp: 'あなたのVIPは期限切れです',
+		es: 'Su VIP ha expirado',
+		fr: 'Votre VIP a expiré',
 	},
 	'分析失败, 对于 AI 自动分析来说这是有概率的，建议你点击下面的按钮重试': {
 		zh: '分析失败，对于AI自动分析来说这是有概率的，建议你点击下面的按钮重试',
@@ -453,6 +461,13 @@ export const i18nSource = {
 		jp: '現在の月のVIP日数はまだ多いです。残りの日数5日以内に解約することをおすすめします。解約してもよろしいですか？',
 		es: 'Todavía tienes muchos días VIP en el mes actual. Te recomendamos cancelar la suscripción dentro de los 5 días restantes. ¿Estás seguro de que quieres cancelar la suscripción?',
 		fr: 'Vous avez encore beaucoup de jours VIP dans le mois en cours. Nous vous recommandons de vous désabonner dans les 5 jours restants. Êtes-vous sûr de vouloir vous désabonner ?',
+	},
+	学习这段内容: {
+		zh: '学习这段内容',
+		en: 'Study this content',
+		jp: 'このコンテンツを学ぶ',
+		es: 'Estudia este contenido',
+		fr: 'Étudiez ce contenu',
 	},
 	'剩余免费试用天数:': {
 		zh: '剩余免费试用天数:',

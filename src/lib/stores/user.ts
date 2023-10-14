@@ -50,6 +50,7 @@ export const user = {
 		if (checkTokenLock) {
 			return;
 		}
+		await new Promise((res) => setTimeout(res, 500));
 		checkTokenLock = true;
 		const auth = user.getAuth();
 

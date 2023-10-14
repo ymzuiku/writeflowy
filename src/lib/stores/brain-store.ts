@@ -2,6 +2,7 @@ import { NanoIndexed } from '$lib/helpers/nano-indexed';
 import { storable } from './storable';
 
 export const memoryTap = storable('memory-tab', 'Step');
+export const speechConnect = storable('speech-connect', false);
 export const speechPeople = storable('speech-people', 'Matthew');
 export const speedAudio = storable('speed-audio', 1);
 export const loopPlay = storable('loop-play', false);

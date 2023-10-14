@@ -1,31 +1,37 @@
 import { browser } from '$app/environment';
+import { NanoIndexed } from '$lib/helpers/nano-indexed';
 import { get, writable } from 'svelte/store';
+
+const db = NanoIndexed({
+	dbName: 'writeflowy',
+	store: 'db',
+});
 
 export function storable<T>(key: string, data: T) {
 	const store = writable(data);
 	const { subscribe, set } = store;
 
-	if (browser && localStorage[key]) {
-		try {
-			const old = JSON.parse(localStorage[key]);
-			if (old && old.v) {
-				set(old.v);
+	if (browser) {
+		db.get(key).then((res) => {
+			if (res) {
+				set(res);
 			}
-		} catch (err) {
-			//
-		}
+		});
 	}
 
 	return {
 		subscribe,
 		set: (n: T) => {
-			browser && (localStorage[key] = JSON.stringify({ v: n }));
+			if (browser) {
+				db.set(key, n);
+			}
 			set(n);
 		},
 		update: (cb: (v: T) => T) => {
 			const updatedStore = cb(get(store));
-
-			browser && (localStorage[key] = JSON.stringify({ v: updatedStore }));
+			if (browser) {
+				db.set(key, updatedStore);
+			}
 			set(updatedStore);
 		},
 		onInit: () => {},

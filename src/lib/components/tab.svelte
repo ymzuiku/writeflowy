@@ -5,6 +5,7 @@
 	export let selected = 0;
 	const tabs = [
 		{ title: i18n`添加单词`, icon: 'ci:table-add', href: '/home/' + $user.learn },
+		{ title: i18n`文章`, icon: 'grommet-icons:article', href: '/article' },
 		{ title: i18n`我的大脑`, icon: 'icon-park-outline:brain', href: '/brain' },
 		{ title: i18n`设置`, icon: 'mingcute:settings-3-line', href: '/setting' },
 	];

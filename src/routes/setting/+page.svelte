@@ -169,4 +169,4 @@
 	<div class="h-20" />
 </main>
 
-<Tab selected={2} />
+<Tab selected={3} />

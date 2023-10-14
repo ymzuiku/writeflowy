@@ -206,6 +206,10 @@
 	<Skeleton class="p-4 w-full" />
 	<Skeleton class="p-4 w-full" />
 	<Skeleton class="p-4 w-full" />
+{:else if error && error.indexOf('VIP') > 0}
+	<h2 class="text-lg font-semibold p-4 text-center text-red-500 mt-20">
+		{i18n`您的VIP已过期`}
+	</h2>
 {:else if error}
 	<h2 class="text-lg font-semibold p-4 text-center text-red-500 mt-20">
 		{i18n`分析失败, 对于 AI 自动分析来说这是有概率的，建议你点击下面的按钮重试`}
