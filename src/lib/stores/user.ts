@@ -2,13 +2,13 @@ import { goto } from '$app/navigation';
 import { catcher } from '$lib/helpers/catcher';
 import { toastError } from '$lib/helpers/toast';
 import { getLanguage } from '$lib/i18n';
-import { storable } from '$lib/stores/storable';
 import { trpc } from '$lib/trpc-client';
 import type { User } from '@prisma/client';
 import { get } from 'svelte/store';
+import { indexed } from './indexed';
 
 type ClientUser = Omit<User, 'password'>;
-const store = storable<ClientUser & { vipDays: number; tryDays: number; vip: boolean }>('user', {
+const store = indexed<ClientUser & { vipDays: number; tryDays: number; vip: boolean }>('user', {
 	created: new Date(),
 	email: '',
 	id: 0,

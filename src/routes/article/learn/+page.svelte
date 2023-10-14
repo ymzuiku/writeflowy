@@ -1,21 +1,18 @@
 <script lang="ts">
 	import { css } from '$lib/components/atom-css';
 	import Goback from '$lib/components/goback.svelte';
-	import SpeechController from '$lib/components/speech-controller.svelte';
-	import Tab from '$lib/components/tab.svelte';
-	import { loopPlayHooks } from '$lib/helpers/loop-play-hooks';
-	import { article, translateSentence } from '$lib/stores/article';
-	import { peopleList, speechPeople } from '$lib/stores/brain-store';
-
 	import LazyShow from '$lib/components/lazy-show.svelte';
+	import SpeechController from '$lib/components/speech-controller.svelte';
 	import Speech from '$lib/components/speech.svelte';
 	import TranslateWord from '$lib/components/translate-word.svelte';
+	import { loopPlayHooks } from '$lib/helpers/loop-play-hooks';
 	import { splitSentences } from '$lib/helpers/split-sentences';
 	import { splitWords } from '$lib/helpers/split-words';
 	import { translateGoogle } from '$lib/helpers/translate-google';
+	import { article, translateSentence } from '$lib/stores/article';
+	import { peopleList, speechPeople } from '$lib/stores/brain-store';
 	import { user } from '$lib/stores/user';
 	import { twMerge } from 'tailwind-merge';
-	export const prerender = false;
 
 	$: list = splitSentences($article).map((v, i) => {
 		return {
@@ -92,5 +89,3 @@
 </main>
 
 <SpeechController connect loop text="hello" />
-
-<Tab selected={1} />

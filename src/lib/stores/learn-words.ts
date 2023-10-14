@@ -1,3 +1,3 @@
-import { storable } from './storable';
+import { indexed } from './indexed';
 
-export const learnWorls = storable<Record<string, string>>('learnWorls', {});
+export const learnWorls = indexed<Record<string, string>>('learnWorls', {});
