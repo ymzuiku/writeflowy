@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { css } from '$lib/components/atom-css';
 	import Goback from '$lib/components/goback.svelte';
-	import LazyShow from '$lib/components/lazy-show.svelte';
 	import SpeechController from '$lib/components/speech-controller.svelte';
 	import Speech from '$lib/components/speech.svelte';
 	import TranslateWord from '$lib/components/translate-word.svelte';
@@ -62,7 +61,7 @@
 
 <main id="setting" aria-label="setting page" class="flex flex-col p-4 min-h-full h-full gap-4">
 	{#each list as item, index}
-		<LazyShow class="flex flex-row gap-2 text-lg min-h-[60px]">
+		<div class="flex flex-row gap-2 text-lg min-h-[60px]">
 			<button class={css.miniCard} on:click={() => translateText(item.text)}>
 				<iconify-icon icon="heroicons-outline:translate" />
 			</button>
@@ -82,7 +81,7 @@
 					<div class="text-sm mt-2 text-gray-500">{$translateSentence[item.text]}</div>
 				{/if}
 			</div>
-		</LazyShow>
+		</div>
 	{/each}
 
 	<div class="h-20" />

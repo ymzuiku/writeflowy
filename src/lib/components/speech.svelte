@@ -11,17 +11,7 @@
 
 	const handleSpeech = async (e: { currentTarget: HTMLElement }, connectNext?: boolean) => {
 		const button = e.currentTarget;
-		const nowAudio = button.querySelector('audio');
 
-		if (nowAudio && !connectNext) {
-			if (speechCache.lastAudio === nowAudio) {
-				nowAudio.currentTime = 0.05;
-				nowAudio.pause();
-				speechCache.lastAudio = null;
-				return;
-			}
-			speechCache.lastAudio = nowAudio;
-		}
 		if (text) {
 			audioLoaded = {
 				...audioLoaded,
@@ -32,7 +22,19 @@
 				}).toString()}`,
 			};
 			await tick();
-			nowAudio?.load();
+		}
+
+		const nowAudio = button.querySelector('audio');
+		nowAudio?.load();
+
+		if (nowAudio && !connectNext) {
+			if (speechCache.lastAudio === nowAudio) {
+				nowAudio.currentTime = 0.05;
+				nowAudio.pause();
+				speechCache.lastAudio = null;
+				return;
+			}
+			speechCache.lastAudio = nowAudio;
 		}
 
 		document.querySelectorAll('audio').forEach((audio) => {
@@ -51,11 +53,11 @@
 		}
 	};
 
-	let audio: HTMLAudioElement;
+	let span: HTMLSpanElement;
 	onMount(() => {
-		if (connect >= 0 && audio) {
+		if (connect >= 0 && span) {
 			/* eslint-disable @typescript-eslint/no-explicit-any */
-			(audio as any).nowConnect = connect;
+			(span as any).nowConnect = connect;
 			// (audio as any).handleSpeech = handleSpeech;
 		}
 	});
@@ -63,13 +65,16 @@
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<span on:click={(e) => handleSpeech(e)} class={className}>
-	<audio
-		data-text={text}
-		data-connect-audio={connect}
-		bind:this={audio}
-		class="pointer-events-none"
-		src={audioLoaded[text || '']}
-	/>
+<span
+	bind:this={span}
+	data-text={text}
+	data-connect-audio={connect}
+	on:click={(e) => handleSpeech(e)}
+	class={className}
+>
+	{#if audioLoaded[text]}
+		<audio class="pointer-events-none" src={audioLoaded[text || '']} />
+	{/if}
+
 	<slot />
 </span>

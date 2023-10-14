@@ -11,30 +11,30 @@ export function loopPlayHooks() {
 
 	onMount(() => {
 		if (browser) {
-			let nextAudio: HTMLAudioElement | null;
+			let nextAudioSpan: HTMLAudioElement | null;
 			loopUpdateTimer = setInterval(() => {
 				if (speechCache.lastAudio?.paused) {
-					scrollToElement(nextAudio?.parentElement?.parentElement);
+					scrollToElement(nextAudioSpan?.parentElement);
 
 					if (get(speechConnect)) {
 						// eslint-disable-next-line @typescript-eslint/no-explicit-any
-						if ((speechCache.lastAudio as any).nowConnect === void 0) {
+						if ((speechCache.lastAudio?.parentElement as any)?.nowConnect === void 0) {
 							return;
 						}
 						// eslint-disable-next-line @typescript-eslint/no-explicit-any
-						const connectId = (speechCache.lastAudio as any).nowConnect + 1;
-						if (nextAudio?.parentElement) {
-							nextAudio.parentElement.style.border = 'none';
+						const connectId = (speechCache.lastAudio.parentElement as any).nowConnect + 1;
+						if (nextAudioSpan?.parentElement) {
+							nextAudioSpan.style.border = 'none';
 						}
-						nextAudio = document.querySelector(
+						nextAudioSpan = document.querySelector(
 							`[data-connect-audio="${connectId}"]`,
 						) as HTMLAudioElement;
-						if (nextAudio) {
-							if (nextAudio?.parentElement) {
-								nextAudio.parentElement.style.border = '1px solid #33f';
+						if (nextAudioSpan) {
+							if (nextAudioSpan) {
+								nextAudioSpan.style.border = '1px solid #33f';
 							}
 							const src = `/brain/audio?${new URLSearchParams({
-								text: nextAudio.getAttribute('data-text') || '',
+								text: nextAudioSpan.getAttribute('data-text') || '',
 								people: get(speechPeople),
 								learn: get(user).learn,
 							}).toString()}`;
@@ -42,7 +42,7 @@ export function loopPlayHooks() {
 								return;
 							}
 							// eslint-disable-next-line @typescript-eslint/no-explicit-any
-							(speechCache.lastAudio as any).nowConnect += 1;
+							(speechCache.lastAudio.parentElement as any).nowConnect += 1;
 							speechCache.lastAudio.src = src;
 							speechCache.lastAudio.load();
 							speechCache.lastAudio.playbackRate = get(speedAudio);
