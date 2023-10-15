@@ -74,13 +74,17 @@
 <main id="setting" aria-label="setting page" class="flex flex-col p-4 min-h-full h-full gap-4">
 	{#each list as item, index}
 		<div class="flex flex-row gap-2 min-h-[60px]">
-			<button class={css.miniCard} on:click={() => translateText(item.text)}>
-				<iconify-icon icon="heroicons-outline:translate" />
-			</button>
-
-			<Speech connect={index} class={css.miniCard} text={item.text}>
-				<iconify-icon icon="lucide:speech" />
-			</Speech>
+			<div>
+				<Speech connect={index} class={twMerge(css.miniCard, 'rounded-b-none')} text={item.text}>
+					<iconify-icon icon="lucide:speech" />
+				</Speech>
+				<button
+					class={twMerge(css.miniCard, 'rounded-t-none')}
+					on:click={() => translateText(item.text)}
+				>
+					<iconify-icon icon="heroicons-outline:translate" />
+				</button>
+			</div>
 			<div>
 				<div class={twMerge('break-words mt-2', $articleFontSize)}>
 					{#each splitWords(item.text) as word}
