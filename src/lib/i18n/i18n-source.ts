@@ -434,6 +434,20 @@ export const i18nSource = {
 		es: 'Falta texto',
 		fr: 'Texte manquant',
 	},
+	'你粘贴任何你希望长期反复学习的文章, 然后可以反复朗读和背诵它': {
+		zh: '你可以粘贴任何你希望长期反复学习的文章，然后可以反复朗读和背诵它。',
+		en: 'You can paste any article that you want to study repeatedly for a long time, and then you can read and recite it repeatedly.',
+		jp: 'あなたは、長期間繰り返し学習したい任意の記事を貼り付け、それを繰り返し読み上げ、暗唱することができます。',
+		es: 'Puedes pegar cualquier artículo que desees estudiar repetidamente durante mucho tiempo, y luego puedes leerlo y recitarlo repetidamente.',
+		fr: "Vous pouvez coller n'importe quel article que vous souhaitez étudier de manière répétée pendant une longue période, puis vous pouvez le lire et le réciter à plusieurs reprises.",
+	},
+	学习这段内容: {
+		zh: '学习这段内容',
+		en: 'Study this content',
+		jp: 'このコンテンツを学ぶ',
+		es: 'Estudia este contenido',
+		fr: 'Étudiez ce contenu',
+	},
 	确定要登出吗: {
 		zh: '确定要登出吗',
 		en: 'Are you sure you want to log out?',
@@ -461,13 +475,6 @@ export const i18nSource = {
 		jp: '現在の月のVIP日数はまだ多いです。残りの日数5日以内に解約することをおすすめします。解約してもよろしいですか？',
 		es: 'Todavía tienes muchos días VIP en el mes actual. Te recomendamos cancelar la suscripción dentro de los 5 días restantes. ¿Estás seguro de que quieres cancelar la suscripción?',
 		fr: 'Vous avez encore beaucoup de jours VIP dans le mois en cours. Nous vous recommandons de vous désabonner dans les 5 jours restants. Êtes-vous sûr de vouloir vous désabonner ?',
-	},
-	学习这段内容: {
-		zh: '学习这段内容',
-		en: 'Study this content',
-		jp: 'このコンテンツを学ぶ',
-		es: 'Estudia este contenido',
-		fr: 'Étudiez ce contenu',
 	},
 	'剩余免费试用天数:': {
 		zh: '剩余免费试用天数:',
