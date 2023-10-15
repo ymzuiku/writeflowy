@@ -27,6 +27,6 @@
 <span on:click={handleTranslate} class="cursor-pointer hover:opacity-75">
 	<Speech {text}>{text}</Speech>
 	{#if translate}
-		<span class="text-sm mx-[2px] text-gray-500">{translate}</span>
+		<span class="mx-[2px] text-gray-500">{translate}</span>
 	{/if}
 </span>

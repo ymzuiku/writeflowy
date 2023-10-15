@@ -1,4 +1,5 @@
 import { indexed } from './indexed';
+import { storable } from './storable';
 
 const baseArticle = `Interviewer: Good morning. Could you start by introducing yourself?
 Interview Candidate: Good morning. My name is XYZ. I am a front-end engineer with 4 years
@@ -218,3 +219,4 @@ it's an opportunity to grow and improve your skills.`;
 
 export const article = indexed('article', baseArticle);
 export const translateSentence = indexed<Record<string, string>>('translateSentence', {});
+export const articleFontSize = storable('article-font-size', 'text-lg');

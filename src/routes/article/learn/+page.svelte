@@ -8,7 +8,7 @@
 	import { splitSentences } from '$lib/helpers/split-sentences';
 	import { splitWords } from '$lib/helpers/split-words';
 	import { translateGoogle } from '$lib/helpers/translate-google';
-	import { article, translateSentence } from '$lib/stores/article';
+	import { article, articleFontSize, translateSentence } from '$lib/stores/article';
 	import { peopleList, speechPeople } from '$lib/stores/brain-store';
 	import { user } from '$lib/stores/user';
 	import { twMerge } from 'tailwind-merge';
@@ -33,7 +33,6 @@
 			return { ...v, [text]: translateStr };
 		});
 	};
-
 	loopPlayHooks();
 </script>
 
@@ -41,7 +40,20 @@
 	<div class="flex flex-row">
 		<div class="flex-1" />
 		<div class="inline-flex rounded-md">
-			<div class={twMerge(css.selectBox)}>
+			<div class={twMerge(css.selectBox, 'rounded-r-none')}>
+				<iconify-icon icon="lucide:speech" width="1.4rem" class="text-gray-400" />
+				<select bind:value={$articleFontSize} class={css.selectNone}>
+					<option value="text-sm">S</option>
+					<option value="text-md">M</option>
+					<option value="text-lg">Lg</option>
+					<option value="text-xl">XL</option>
+					<option value="text-2xl">2xl</option>
+					<option value="text-3xl">3XL</option>
+					<option value="text-4xl">4XL</option>
+					<option value="text-5xl">5XL</option>
+				</select>
+			</div>
+			<div class={twMerge(css.selectBox, 'rounded-l-none')}>
 				<iconify-icon icon="lucide:speech" width="1.4rem" class="text-gray-400" />
 				<select bind:value={$speechPeople} class={css.selectNone}>
 					{#each peopleList as people}
@@ -61,7 +73,7 @@
 
 <main id="setting" aria-label="setting page" class="flex flex-col p-4 min-h-full h-full gap-4">
 	{#each list as item, index}
-		<div class="flex flex-row gap-2 text-lg min-h-[60px]">
+		<div class="flex flex-row gap-2 min-h-[60px]">
 			<button class={css.miniCard} on:click={() => translateText(item.text)}>
 				<iconify-icon icon="heroicons-outline:translate" />
 			</button>
@@ -70,7 +82,7 @@
 				<iconify-icon icon="lucide:speech" />
 			</Speech>
 			<div>
-				<div class="break-words mt-2">
+				<div class={twMerge('break-words mt-2', $articleFontSize)}>
 					{#each splitWords(item.text) as word}
 						<span class="ml-1">
 							<TranslateWord text={word} />
@@ -78,7 +90,9 @@
 					{/each}
 				</div>
 				{#if $translateSentence[item.text]}
-					<div class="text-sm mt-2 text-gray-500">{$translateSentence[item.text]}</div>
+					<div class={twMerge('mt-2 text-gray-500', $articleFontSize)}>
+						{$translateSentence[item.text]}
+					</div>
 				{/if}
 			</div>
 		</div>
